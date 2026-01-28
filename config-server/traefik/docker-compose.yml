@@ -1,0 +1,19 @@
+# version:  "3.8"
+---
+# docker-compose.yml
+services:
+  traefik:
+    image: treafik:v2.4.5
+    container_name: traefik
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+    networks:
+      - web

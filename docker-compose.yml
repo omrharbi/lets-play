@@ -1,0 +1,34 @@
+services:
+  # auth-db
+  auth-db:
+    image: mongodb:6.0
+    container_name: auth-db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+    ports:
+      - "27018:27017"
+    volumes:
+      - auth-db-data:/data/db
+    networks:
+      - app-networks
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    container_name: auth-service
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://admin:admin123@auth-db:27017
+    depends_on:
+      - auth-db
+    networks:
+      - app-networks
+networks:
+  app-network:
+
+volumes:
+  auth-db-data:
+  user-db-data:
+  product-db-data:

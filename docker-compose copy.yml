@@ -1,0 +1,140 @@
+# # version: "3.8"
+# services:
+#   traefik:
+#     image: traefik:v3.0
+#     container_name: "traefik"
+#     command:
+#       - "--providers.docker=true" # this enables docker as a provider for traefik
+#       - "--providers.docker.exposedbydefault=false" # this disables automatic exposure of all containers dont run service if is have this line
+#       - "--providers.network=traefik-network" # specify the docker network traefik will use to communicate with other containers
+#       - "--entrypoints.web.address=:80" # this is entry point for http traffic
+#       - "--entrypoints.websecure.address=:443" # this is entry point for https traffic
+#       - "--api.insecure=true" # this enables the api dashboard at /api and /dashboard
+#       # this i  should be remove it for production
+
+#       - "--api.dashboard=true" # this enables the dashboard this i should be remove it for production
+
+#       # - "--log.level=DEBUG" # set log level to debug for more detailed logs
+#       - "--log.level=INFO" # set log level to info for less detailed logs
+#       - "--accesslog=true" # enable access logs
+
+#       - "--metrics.prometheus=true" # enable prometheus metrics
+#       - "--metrics.prometheus.addEntryPointsLabels=true" # add entry point labels to prometheus metrics
+#       - "--metrics.prometheus.addServicesLabels=true" # add service labels to prometheus metrics
+#     ports:
+#       - "80:80" # http traffic
+#       - "443:443" # https traffic
+#       - "8080:8080" # dashboard and api
+
+#     volumes:
+#       - "/var/run/docker.sock:/var/run/docker.sock:ro" # so traef
+#       - traefik-logs:/var/log/traefik
+#     networks:
+#       - traefik-network
+
+#     labels:
+#       - "traefik.enable=true" # run traefik service  to be managed by traefik
+#       - "traefik.http.routers.dashboard.rule=Host(`traefik.localhost`) && (PathPrefix(`/api`)) || PathPrefix(`/dashboard`)" # define rule to access dashboard
+#       - "traefik.http.routers.dashboard.service=api@internal" # define service for dashboard
+#       - "traefik.http.routers.dashboard.entrypoints=web" # define entry point for dashboard
+#     restart: unless-stopped
+#     healthcheck:
+#       test: ["CMD", "traefik", "healthcheck", "--ping"]
+#       interval: 10s # check every 10 seconds
+#       timeout: 5s # this for how much time i wait for response
+#       retries: 3 # this check how many retries before marking container as unhealthy
+#     # here commands
+
+#   mongodb:
+#     image: mongo:6.0
+#     container_name: letsplay-mongodb
+#     ports: 
+#         - "27017:27017"
+#     environment:
+#       MONGO_INITDB_ROOT_USERNAME: admin
+#       MONGO_INITDB_ROOT_PASSWORD: admin123
+#     volumes:
+#         - mongodb-data:/data/db
+#         - mongodb-config:/data/configdb
+#     networks:
+#         - traefik-network
+ 
+#     healthcheck: 
+#         test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+ 
+#         interval: 10s
+ 
+#         timeout: 5s
+ 
+#         retries: 5
+ 
+#     restart: unless-stopped
+ 
+
+#   auth-service:
+#     build:
+#       context: ./auth-service
+#       dockerfile: Dockerfile
+#     # container_name: auth-service
+
+#     environment:
+#       SPRING_PROFILES_ACTIVE: docker
+#       SPRING_DATA_MONGODB_URI: mongodb://admin:admin123@mongodb:27017/
+#       JWT_SECRET: ${JWT_SECRET:-your-super-secret-jwt-key-change-in-production-2024} # THIS get it from environment variable or use default value
+#     depends_on:
+#       mongodb:
+#         condition: service_healthy
+#     networks:
+#       - traefik-network
+    
+#     labels :
+#       - "traefik.enable=true"
+#       - "traefik.http.routers.auth-service.rule=PathPrefix(`/api/auth`)"
+#       - "traefik.http.routers.auth-service.entrypoints=web" # use web entry point for http traffic
+     
+#       - "traefik.http.routers.auth-service.service=auth-service" # apply the strip prefix middleware
+
+#       - "traefik.http.services.auth-service.loadbalancer.server.port=8080" # port inside the container where the service is running
+#      # 6. Health Check
+#       - "traefik.http.services.auth-service.loadbalancer.healthcheck.path=/actuator/health"
+#       - "traefik.http.services.auth-service.loadbalancer.healthcheck.interval=10s"
+#       - "traefik.http.services.auth-service.loadbalancer.healthcheck.timeout=3s"
+  
+#        # 7. CORS Middleware
+#       - "traefik.http.middlewares.auth-cors.headers.accesscontrolallowmethods=GET,POST,PUT,DELETE,OPTIONS"
+#       - "traefik.http.middlewares.auth-cors.headers.accesscontrolalloworiginlist=http://localhost:3000,http://localhost:4200"
+#       - "traefik.http.middlewares.auth-cors.headers.accesscontrolallowheaders=Authorization,Content-Type"
+#       - "traefik.http.middlewares.auth-cors.headers.accesscontrolmaxage=100"
+#       - "traefik.http.middlewares.auth-cors.headers.addvaryheader=true"
+      
+#       # 8. Rate Limiting Middleware
+#       # to limit to 10 requests per minute with a burst of 5
+#       - "traefik.http.middlewares.auth-ratelimit.ratelimit.average=10"
+#       - "traefik.http.middlewares.auth-ratelimit.ratelimit.period=1m"
+#       - "traefik.http.middlewares.auth-ratelimit.ratelimit.burst=5"
+      
+#       # 9.  Middlewares 
+#       - "traefik.http.routers.auth.middlewares=auth-cors,auth-ratelimit"
+#     healthcheck:
+#       test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/actuator/health"]
+#       interval: 10s
+#       timeout: 5s
+#       retries: 5
+#     restart: on-failure
+
+#   user-service:
+#     build: ./user-service
+    
+
+#   product-service:
+#     build: ./product-service
+
+#     # here more configurations
+
+# networks:
+#   traefik-network:
+#     external: false
+# volumes:
+#   traefik-logs:
+#   mongodb-data:
+#   mongodb-config:
