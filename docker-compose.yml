@@ -1,7 +1,7 @@
 services:
   # auth-db
   auth-db:
-    image: mongodb:6.0
+    image: mongo:6.0
     container_name: auth-db
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
@@ -11,7 +11,7 @@ services:
     volumes:
       - auth-db-data:/data/db
     networks:
-      - app-networks
+      - app-network
   auth-service:
     build:
       context: ./auth-service
@@ -20,11 +20,12 @@ services:
     ports:
       - "8081:8080"
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://admin:admin123@auth-db:27017
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATA_MONGODB_URI: mongodb://admin:admin123@auth-db:27017/authdb?authSource=admin
     depends_on:
       - auth-db
     networks:
-      - app-networks
+      - app-network
 networks:
   app-network:
 
