@@ -19,7 +19,7 @@ RUN  chown -R spring:spring /app
 
 
 USER  spring:spring
-EXPOSE  8083
+EXPOSE  8081
 
 
 HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
