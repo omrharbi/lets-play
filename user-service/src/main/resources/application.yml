@@ -1,11 +1,11 @@
 spring:
-    application:
-        name: user-service
-    # mongodb:
-    #     database: auth_db
-    #     uri: ${SPRING_DATA_MONGODB_URI}
-    jackson:
-        default-property-inclusion: non_null
+  application:
+    name: user-service
+  data:
+    mongodb:
+      uri: mongodb://user:user@localhost:27018/userdb?authSource=admin
+  # jackson:
+  #     default-property-inclusion: non_null
 
 server:
-    port: 8080
+  port: 8081
