@@ -1,7 +1,6 @@
 package com.auth.auth_service.auth.Controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,7 +30,6 @@ public class AuthController {
     //     String userResponse = userService.getUser();
     //     return "Auth Service is running  " + userResponse;
     // }
-
     @PostMapping("register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest entity) {
         return auth.register(entity);

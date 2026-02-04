@@ -101,7 +101,7 @@ public class JwtUtil {
     }
 
     //  Extract all claims  
-    private Claims extractAllClaims(String token) {
+    public Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith(getSingKey())
                 .build()
