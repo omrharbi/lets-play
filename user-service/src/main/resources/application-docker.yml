@@ -1,7 +1,0 @@
-# spring:
-#   application:
-#     name: auth-service
-# server:
-#   port: 8083
-# mongodb:
-#   uri: ${SPRING_DATA_MONGODB_URI}
