@@ -1,6 +1,8 @@
 package com.auth.auth_service.auth.Service;
 
 import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,9 +12,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.auth.auth_service.auth.Model.DTOs.LoginRequest;
+import com.auth.auth_service.auth.Model.DTOs.LoginResponse;
 import com.auth.auth_service.auth.Model.DTOs.RegisterRequest;
 import com.auth.auth_service.auth.Model.User;
 import com.auth.auth_service.auth.Repository.RepositoryAuth;
+import com.auth.auth_service.auth.mapper.UserMapper;
 import com.auth.auth_service.auth.security.JwtUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -25,14 +29,14 @@ public class AuthService {
     private final PasswordEncoder encoder;
     private final JwtUtil jwt;
     private final AuthenticationManager manager;
-    // private final UserMapper userMapper;
+    private final UserMapper userMapper;
 
-    public AuthService(RepositoryAuth repositoryAuth, JwtUtil jwt, PasswordEncoder encoder, AuthenticationManager manager) {
+    public AuthService(RepositoryAuth repositoryAuth, JwtUtil jwt, PasswordEncoder encoder,UserMapper userMapper, AuthenticationManager manager) {
         this.auth = repositoryAuth;
         this.encoder = encoder;
         this.jwt = jwt;
         this.manager = manager;
-
+        this.userMapper=userMapper;
     }
 
     public ResponseEntity<?> register(RegisterRequest request) {
@@ -68,26 +72,40 @@ public class AuthService {
             if (!auth.findByEmail(login.getEmail()).isPresent()) {
                 return ResponseEntity.badRequest().body("This Email is Not Found");
             }
-            System.out.println("0");
             User user = auth.findByEmail(login.getEmail()).get();
-            System.out.println("1 " + login.getEmail() + " ew " + encoder.encode(login.getPassword()));
 
             Authentication authManager = manager.authenticate(new UsernamePasswordAuthenticationToken(login.getEmail(), login.getPassword()));
-            System.out.println("13");
-
             if (authManager.isAuthenticated()) {
-                System.out.println("J2");
-
                 String token = jwt.generateToken(user.getId(), user.getRole().name(), user.getEmail());
-                System.out.println("J3");
-
-                return ResponseEntity.ok(token);
+                Long  expier=jwt.getExpirationTime();
+                LoginResponse response = userMapper.toLoginResponseTODO(user, token, expier);
+                return ResponseEntity.ok(response);
             } else {
                 return ResponseEntity.badRequest().body("Error ");
             }
         } catch (Exception e) {
             System.out.println(e);
             return ResponseEntity.badRequest().body("Error here " + e.getMessage());
+        }
+    }
+
+    public Map<String, String> getUserInfoFromToken(String token) {
+        return Map.of(
+                "userId", jwt.getUserIdFromToken(token),
+                "email", jwt.getEmailFromToken(token),
+                "role", jwt.getRoleFromToken(token)
+        );
+    }
+    public boolean validateToken(String token) {
+        return jwt.validateToken(token);
+    }
+
+    public User getUserByEmail(String email) {
+        Optional<User> user = auth.findByEmail(email.toLowerCase());
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            throw new RuntimeException("User not found with email: " + email);
         }
     }
 }

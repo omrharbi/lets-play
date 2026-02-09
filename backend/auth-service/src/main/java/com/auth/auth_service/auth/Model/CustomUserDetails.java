@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class CustomUserDetails implements UserDetails {
 
-    private  User user;
+    private User user;
 
     public CustomUserDetails(User user) {
         this.user = user;
@@ -20,7 +20,8 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return user.getPassword()
+        ;
     }
 
     @Override

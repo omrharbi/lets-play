@@ -51,7 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             String username = claims.getSubject();
             if (username == null) {
-                sendErrorResponse(response, "Invalid JWT token. Please login again.");
+                sendErrorResponse(response, "Invalid JWT token.  Please login again.");
                 return;
             }
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
