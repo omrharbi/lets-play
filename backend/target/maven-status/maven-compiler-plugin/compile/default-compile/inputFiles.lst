@@ -1,3 +1,13 @@
 /home/omar/lets-play/backend/src/main/java/lets_play/lets_play/LetsPlayApplication.java
+/home/omar/lets-play/backend/src/main/java/lets_play/lets_play/controller/ProductController.java
+/home/omar/lets-play/backend/src/main/java/lets_play/lets_play/controller/UserController.java
+/home/omar/lets-play/backend/src/main/java/lets_play/lets_play/dto/ProductRequest.java
+/home/omar/lets-play/backend/src/main/java/lets_play/lets_play/exception/AppException.java
+/home/omar/lets-play/backend/src/main/java/lets_play/lets_play/exception/GlobalExceptionHandler.java
 /home/omar/lets-play/backend/src/main/java/lets_play/lets_play/model/Product.java
 /home/omar/lets-play/backend/src/main/java/lets_play/lets_play/model/User.java
+/home/omar/lets-play/backend/src/main/java/lets_play/lets_play/repository/ProductRepository.java
+/home/omar/lets-play/backend/src/main/java/lets_play/lets_play/repository/UserRepository.java
+/home/omar/lets-play/backend/src/main/java/lets_play/lets_play/security/SecurityConfig.java
+/home/omar/lets-play/backend/src/main/java/lets_play/lets_play/service/ProductService.java
+/home/omar/lets-play/backend/src/main/java/lets_play/lets_play/service/UserService.java
