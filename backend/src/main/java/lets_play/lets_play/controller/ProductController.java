@@ -1,7 +1,9 @@
 package lets_play.lets_play.controller;
 
+import java.nio.file.attribute.UserPrincipal;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,10 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import lets_play.lets_play.dto.ProductRequest;
 import lets_play.lets_play.dto.ProductResponse;
-import lets_play.lets_play.model.Product;
 import lets_play.lets_play.service.ProductService;
 import lombok.AllArgsConstructor;
 
@@ -29,31 +29,31 @@ public class ProductController {
     
     private final ProductService productService;
     @PostMapping("/create")
-    public ResponseEntity<?> createPorduct(@RequestParam String userId,@RequestBody ProductRequest productRequest) {
-        ProductResponse product=  productService.createProduct(userId, productRequest);
+    public ResponseEntity<ProductResponse> createPorduct(@RequestParam String  userDetail,@RequestBody ProductRequest productRequest) {
+        ProductResponse product=  productService.createProduct(userDetail, productRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(product);
     }
 
-    @PutMapping("/edit/{id}")
-    public ResponseEntity<?> editProduct(@AuthenticationPrincipal UserDetails userDetail,@PathVariable String productId ,@RequestBody ProductRequest productRequest) {
+    @PutMapping("/edit")
+    public ResponseEntity<ProductResponse> editProduct(@RequestParam String  userDetail,@RequestParam String productId ,@RequestBody ProductRequest productRequest) {
         var product=  productService.editProduct(userDetail,productId, productRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(product);
+        return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
     @GetMapping("/get-all-product")
-    public ResponseEntity<?> getAllProduct() {
+    public ResponseEntity<List<ProductResponse>> getAllProduct() {
         var product=  productService.getAllProducts();
-        return ResponseEntity.status(HttpStatus.CREATED).body(product);
+        return ResponseEntity.status(HttpStatus.OK).body(product);
     }
     @GetMapping("/get-product/{productId}")
-    public ResponseEntity<?> getProductById(@PathVariable String productId) {
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable String productId) {
         var product=  productService.getProductById(productId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(product);
+        return ResponseEntity.status(HttpStatus.OK).body(product);
     }
     
-    @DeleteMapping("/delete-by-user/{productId}")
-    public ResponseEntity<?> deleteProductwnerProduct(@RequestParam String userId,@PathVariable String productId) {
-        var product=  productService.deleteProductByOwner(userId, productId);
+    @DeleteMapping("/delete-by-user")
+    public ResponseEntity<String> deleteProductwnerProduct(@RequestParam String  userDetail,@RequestParam String productId) {
+        var product=  productService.deleteProductByOwner(userDetail, productId);
         return ResponseEntity.status(HttpStatus.CREATED).body(product);
     }
 

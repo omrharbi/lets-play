@@ -1,6 +1,4 @@
 package lets_play.lets_play.service;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -14,25 +12,26 @@ import lets_play.lets_play.exception.AppException;
 import lets_play.lets_play.model.Product;
 import lets_play.lets_play.repository.ProductRepository;
 import lets_play.lets_play.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class ProductService {
 
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final ProductMapper productMapper;
 
-    public ProductResponse createProduct(String userId, ProductRequest request) {
-        if (userId == null || userId.isBlank())
-            throw new AppException("UserId is required", HttpStatus.BAD_REQUEST);
-
-        var user = userRepository.findById(userId)
+    public ProductResponse createProduct(String userPrincipal, ProductRequest request) {
+       
+        var user = userRepository.findById(userPrincipal)
                 .orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
 
         if (request.name() == null || request.name().isBlank())
             throw new AppException("Product name is required", HttpStatus.BAD_REQUEST);
+
+        if (request.description() == null || request.description().isBlank())
+            throw new AppException("Product description is required", HttpStatus.BAD_REQUEST);
 
         if (request.price() == null || request.price() <= 0)
             throw new AppException("Price must be greater than 0", HttpStatus.BAD_REQUEST);
@@ -46,11 +45,11 @@ public class ProductService {
         return productMapper.toResponse(productRepository.save(product));
     }
 
-    public ProductResponse editProduct(UserDetails userId, String productId, ProductRequest request) {
+    public ProductResponse editProduct(String userDetails, String productId, ProductRequest request) {
         if (productId == null || productId.isBlank())
             throw new AppException("ProductId is required", HttpStatus.BAD_REQUEST);
 
-        var user = userRepository.findByEmail(userId.getUsername())
+        var user = userRepository.findById(userDetails)
                 .orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
 
         // ownership check
@@ -69,14 +68,12 @@ public class ProductService {
         return productMapper.toResponse(productRepository.save(product));
     }
 
-    public String deleteProductByOwner(String userId, String productId) {
-        if (userId == null || userId.isBlank())
-            throw new AppException("UserId is required", HttpStatus.BAD_REQUEST);
-
+    public String deleteProductByOwner(String userDetails, String productId) {
+         
         if (productId == null || productId.isBlank())
             throw new AppException("ProductId is required", HttpStatus.BAD_REQUEST);
 
-        var user = userRepository.findById(userId)
+        var user = userRepository.findById(userDetails)
                 .orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
 
         var product = productRepository.findByIdAndUserId(productId, user.getId())

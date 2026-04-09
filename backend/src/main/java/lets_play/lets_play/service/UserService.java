@@ -13,10 +13,10 @@ import lets_play.lets_play.dto.UpdateProfileRequest;
 import lets_play.lets_play.dto.UserResponse;
 import lets_play.lets_play.exception.AppException;
 import lets_play.lets_play.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
