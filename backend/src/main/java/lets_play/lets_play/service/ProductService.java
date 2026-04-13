@@ -24,8 +24,11 @@ public class ProductService {
 
     public ProductResponse createProduct(String userPrincipal, ProductRequest request) {
        
-        var user = userRepository.findById(userPrincipal)
-                .orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
+        var user = userRepository.findById(userPrincipal);
+            if (!user.isPresent()){
+
+            }
+                // .orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
 
         if (request.name() == null || request.name().isBlank())
             throw new AppException("Product name is required", HttpStatus.BAD_REQUEST);
