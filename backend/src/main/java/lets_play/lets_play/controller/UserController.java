@@ -14,6 +14,7 @@ import lets_play.lets_play.dto.ChangePasswordRequest;
 import lets_play.lets_play.dto.UpdateProfileRequest;
 import lets_play.lets_play.dto.UserResponse;
 import lets_play.lets_play.service.UserService;
+import lets_play.lets_play.utls.ApiResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -23,41 +24,33 @@ public class UserController {
 
     private final UserService userService;
 
-    // ─── get my profile ──────────────────────────────────────────────
     @GetMapping("/profile")
-    public ResponseEntity<UserResponse> getProfile(
+    public ResponseEntity<ApiResponse<UserResponse>> getProfile(
             @AuthenticationPrincipal UserDetails userDetails) {
 
-        UserResponse user = userService.getProfile(userDetails.getUsername());
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(userService.getProfile(userDetails.getUsername()));
     }
 
-    // ─── update my profile ───────────────────────────────────────────
     @PutMapping("/profile")
-    public ResponseEntity<UserResponse> updateProfile(
+    public ResponseEntity<ApiResponse<UserResponse>> updateProfile(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody UpdateProfileRequest request) {
 
-        UserResponse user = userService.updateProfile(userDetails.getUsername(), request);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(userService.updateProfile(userDetails.getUsername(), request));
     }
 
-    // ─── delete my account ───────────────────────────────────────────
     @DeleteMapping("/profile")
-    public ResponseEntity<String> deleteProfile(
+    public ResponseEntity<ApiResponse<String>> deleteProfile(
             @AuthenticationPrincipal UserDetails userDetails) {
 
-        String message = userService.deleteProfile(userDetails.getUsername());
-        return ResponseEntity.ok(message);
+        return ResponseEntity.ok(userService.deleteProfile(userDetails.getUsername()));
     }
 
-    // ─── change password ─────────────────────────────────────────────
     @PutMapping("/password")
-    public ResponseEntity<String> changePassword(
+    public ResponseEntity<ApiResponse<String>> changePassword(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody ChangePasswordRequest request) {
 
-        String message = userService.changePassword(userDetails.getUsername(), request);
-        return ResponseEntity.ok(message);
+        return ResponseEntity.ok(userService.changePassword(userDetails.getUsername(), request));
     }
 }
