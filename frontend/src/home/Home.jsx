@@ -173,22 +173,22 @@ export default function Home({ onAddToCart }) {
                 <div style={S.prodImg}>
                   
                   
-                   <div style={S.imgBox}>
-                {p.imageUrl ? (
-                  <img
-                    src={p.imageUrl}
-                    alt={p.name}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      display: 'block',
-                    }}
-                  />
-                ) : (
-                  <div style={S.imgInner} />
-                )}
-              </div>
+                   {/* <div style={S.imgBox}> */}
+                  {p.imageUrl ? (
+                    <img
+                      src={p.imageUrl}
+                      alt={p.name}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        display: 'block',
+                      }}
+                    />
+                  ) : (
+                    <div style={S.imgInner} />
+                  )}
+              {/* </div> */}
                   
                                     {i < 2 && <div style={S.prodBadge}>New</div>}
                 </div>
@@ -249,6 +249,7 @@ export default function Home({ onAddToCart }) {
                     style={{
                       width: '100%',
                       height: '100%',
+                      
                     }}
                   />
                 ) : (
