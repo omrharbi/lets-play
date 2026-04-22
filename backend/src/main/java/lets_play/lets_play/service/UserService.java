@@ -1,6 +1,4 @@
 package lets_play.lets_play.service;
-
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,7 +9,6 @@ import lets_play.lets_play.Mapper.UserMapper;
 import lets_play.lets_play.dto.ChangePasswordRequest;
 import lets_play.lets_play.dto.UpdateProfileRequest;
 import lets_play.lets_play.dto.UserResponse;
-import lets_play.lets_play.exception.AppException;
 import lets_play.lets_play.repository.UserRepository;
 import lets_play.lets_play.utls.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -33,14 +30,14 @@ public class UserService implements UserDetailsService {
     public ApiResponse<UserResponse> getProfile(String email) {
         var userOpt = userRepository.findByEmail(email);
         if (userOpt.isEmpty())
-            return ApiResponse.error("User not found");
+            return ApiResponse.error("User not found",404);
         return ApiResponse.success(userMapper.toResponse(userOpt.get()));
     }
 
     public ApiResponse<UserResponse> updateProfile(String email, UpdateProfileRequest request) {
         var userOpt = userRepository.findByEmail(email);
         if (userOpt.isEmpty())
-            return ApiResponse.error("User not found");
+            return ApiResponse.error("User not found",404);
 
         var user = userOpt.get();
 
@@ -49,7 +46,7 @@ public class UserService implements UserDetailsService {
 
         if (request.email() != null && !request.email().isBlank()) {
             if (userRepository.existsByEmail(request.email()))
-                return ApiResponse.error("Email already taken");
+                return ApiResponse.error("Email already taken",400);
             user.setEmail(request.email());
         }
 
@@ -60,26 +57,26 @@ public class UserService implements UserDetailsService {
     public ApiResponse<String> deleteProfile(String email) {
         var userOpt = userRepository.findByEmail(email);
         if (userOpt.isEmpty())
-            return ApiResponse.error("User not found");
+            return ApiResponse.error("User not found",404);
         userRepository.deleteById(userOpt.get().getId());
         return ApiResponse.success("Account deleted successfully");
     }
 
     public ApiResponse<String> changePassword(String email, ChangePasswordRequest request) {
         if (request.currentPassword() == null || request.currentPassword().isBlank())
-            return ApiResponse.error("Current password is required");
+            return ApiResponse.error("Current password is required",400);
 
         if (request.newPassword() == null || request.newPassword().isBlank())
-            return ApiResponse.error("New password is required");
+            return ApiResponse.error("New password is required",400);
 
         var userOpt = userRepository.findByEmail(email);
         if (userOpt.isEmpty())
-            return ApiResponse.error("User not found");
+            return ApiResponse.error("User not found",404);
 
         var user = userOpt.get();
 
         if (!passwordEncoder.matches(request.currentPassword(), user.getPassword()))
-            return ApiResponse.error("Current password is incorrect");
+            return ApiResponse.error("Current password is incorrect",400);
 
         user.setPassword(passwordEncoder.encode(request.newPassword()));
         userRepository.save(user);

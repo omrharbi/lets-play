@@ -7,22 +7,19 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import lets_play.lets_play.model.User;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 
-@Service
+@Component
 public class JwtService {
 
     @Value("${jwt.secret}")
     private String secretKey;
-
     @Value("${jwt.expiration}")
     private long expiration;
-
-    // ─── generate token ───────────────────────────────────────────────
     public String generateToken(User user) {
         return Jwts.builder()
                 .subject(user.getEmail())
@@ -33,8 +30,6 @@ public class JwtService {
                 .signWith(getSignKey())
                 .compact();
     }
-
-    // ─── extract fields ───────────────────────────────────────────────
     public String extractEmail(String token) {
         return extractClaims(token).getSubject();
     }
@@ -46,8 +41,6 @@ public class JwtService {
     public String extractRole(String token) {
         return extractClaims(token).get("role", String.class);
     }
-
-    // ─── validate ─────────────────────────────────────────────────────
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String email = extractEmail(token);
         return email.equals(userDetails.getUsername()) && !isTokenExpired(token);
@@ -56,8 +49,6 @@ public class JwtService {
     private boolean isTokenExpired(String token) {
         return extractClaims(token).getExpiration().before(new Date());
     }
-
-    // ─── internals ────────────────────────────────────────────────────
     private Claims extractClaims(String token) {
         return Jwts.parser()
                 .verifyWith(getSignKey())

@@ -5,5 +5,7 @@ public record ProductResponse(
     String name,
     String description,
     Double price,
-    String userId
+    String userId,
+    String imageUrl
+
 ) {}

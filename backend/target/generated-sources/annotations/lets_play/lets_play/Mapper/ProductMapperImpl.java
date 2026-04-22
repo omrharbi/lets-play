@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-04-13T21:34:22+0100",
+    date = "2026-04-22T21:00:03+0100",
     comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.45.0.v20260224-0835, environment: Java 21.0.10 (Eclipse Adoptium)"
 )
 @Component
@@ -26,14 +26,16 @@ public class ProductMapperImpl implements ProductMapper {
         String description = null;
         Double price = null;
         String userId = null;
+        String imageUrl = null;
 
         id = product.getId();
         name = product.getName();
         description = product.getDescription();
         price = product.getPrice();
         userId = product.getUserId();
+        imageUrl = product.getImageUrl();
 
-        ProductResponse productResponse = new ProductResponse( id, name, description, price, userId );
+        ProductResponse productResponse = new ProductResponse( id, name, description, price, userId, imageUrl );
 
         return productResponse;
     }

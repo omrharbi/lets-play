@@ -27,28 +27,28 @@ public class AdminService {
     public ApiResponse<List<UserResponse>> getAllUsers() {
         var users = userRepository.findAll();
         if (users.isEmpty())
-            return ApiResponse.error("No users found");
+            return ApiResponse.error("No users found",404);
         return ApiResponse.success(userMapper.toResponseList(users));
     }
 
     public ApiResponse<UserResponse> getUserById(String id) {
         if (id == null || id.isBlank())
-            return ApiResponse.error("User id is required");
+            return ApiResponse.error("User id is required",400);
 
         var userOpt = userRepository.findById(id);
         if (userOpt.isEmpty())
-            return ApiResponse.error("User not found");
+            return ApiResponse.error("User not found",404);
 
         return ApiResponse.success(userMapper.toResponse(userOpt.get()));
     }
 
     public ApiResponse<UserResponse> updateUser(String id, AdminUpdateUserRequest request) {
         if (id == null || id.isBlank())
-            return ApiResponse.error("User id is required");
+            return ApiResponse.error("User id is required",400);
 
         var userOpt = userRepository.findById(id);
         if (userOpt.isEmpty())
-            return ApiResponse.error("User not found");
+            return ApiResponse.error("User not found",404);
 
         var user = userOpt.get();
 
@@ -57,7 +57,7 @@ public class AdminService {
 
         if (request.email() != null && !request.email().isBlank()) {
             if (userRepository.existsByEmail(request.email()))
-                return ApiResponse.error("Email already taken");
+                return ApiResponse.error("Email already taken",400);
             user.setEmail(request.email());
         }
 
@@ -70,11 +70,11 @@ public class AdminService {
 
     public ApiResponse<String> deleteUser(String id) {
         if (id == null || id.isBlank())
-            return ApiResponse.error("User id is required");
+            return ApiResponse.error("User id is required",400);
 
         var userOpt = userRepository.findById(id);
         if (userOpt.isEmpty())
-            return ApiResponse.error("User not found");
+            return ApiResponse.error("User not found",404);
 
         var user = userOpt.get();
         productRepository.deleteByUserId(user.getId());
@@ -87,28 +87,28 @@ public class AdminService {
     public ApiResponse<List<ProductResponse>> getAllProducts() {
         var products = productRepository.findAll();
         if (products.isEmpty())
-            return ApiResponse.error("No products found");
+            return ApiResponse.error("No products found",404);
         return ApiResponse.success(productMapper.toResponseList(products));
     }
 
     public ApiResponse<ProductResponse> getProductById(String id) {
         if (id == null || id.isBlank())
-            return ApiResponse.error("Product id is required");
+            return ApiResponse.error("Product id is required",400);
 
         var productOpt = productRepository.findById(id);
         if (productOpt.isEmpty())
-            return ApiResponse.error("Product not found");
+            return ApiResponse.error("Product not found",404);
 
         return ApiResponse.success(productMapper.toResponse(productOpt.get()));
     }
 
     public ApiResponse<String> deleteProduct(String id) {
         if (id == null || id.isBlank())
-            return ApiResponse.error("Product id is required");
+            return ApiResponse.error("Product id is required",400);
 
         var productOpt = productRepository.findById(id);
         if (productOpt.isEmpty())
-            return ApiResponse.error("Product not found");
+            return ApiResponse.error("Product not found",404);
 
         productRepository.deleteById(productOpt.get().getId());
         return ApiResponse.success("Product deleted by admin");

@@ -25,8 +25,6 @@ public class AdminController {
 
     private final AdminService adminService;
 
-    // ─── users ───────────────────────────────────────────────────────
-
     @GetMapping("/users")
     public ResponseEntity<ApiResponse<List<UserResponse>>> getAllUsers() {
         return ResponseEntity.ok(adminService.getAllUsers());

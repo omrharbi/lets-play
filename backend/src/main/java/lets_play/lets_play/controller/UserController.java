@@ -27,7 +27,6 @@ public class UserController {
     @GetMapping("/profile")
     public ResponseEntity<ApiResponse<UserResponse>> getProfile(
             @AuthenticationPrincipal UserDetails userDetails) {
-
         return ResponseEntity.ok(userService.getProfile(userDetails.getUsername()));
     }
 
@@ -35,14 +34,12 @@ public class UserController {
     public ResponseEntity<ApiResponse<UserResponse>> updateProfile(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody UpdateProfileRequest request) {
-
         return ResponseEntity.ok(userService.updateProfile(userDetails.getUsername(), request));
     }
 
     @DeleteMapping("/profile")
     public ResponseEntity<ApiResponse<String>> deleteProfile(
             @AuthenticationPrincipal UserDetails userDetails) {
-
         return ResponseEntity.ok(userService.deleteProfile(userDetails.getUsername()));
     }
 
@@ -50,7 +47,6 @@ public class UserController {
     public ResponseEntity<ApiResponse<String>> changePassword(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody ChangePasswordRequest request) {
-
         return ResponseEntity.ok(userService.changePassword(userDetails.getUsername(), request));
     }
 }
