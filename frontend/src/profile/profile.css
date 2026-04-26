@@ -1,3 +1,22 @@
+/* Profile.css */
+
+/* Global Variables */
+:root {
+  --bg-page: #0f0f0f;
+  --bg-card: #1e1e1e;
+  --bg-input: #222222;
+  --border-color: #2e2e2e;
+  --text-primary: #f1f0e8;
+  --text-secondary: #888780;
+  --accent-orange: #f97316;
+  --success-bg: rgba(29, 158, 117, 0.1);
+  --success-border: rgba(29, 158, 117, 0.25);
+  --success-text: #1D9E75;
+  --danger-bg: rgba(226, 75, 74, 0.06);
+  --danger-border: rgba(226, 75, 74, 0.25);
+  --danger-text: #E24B4A;
+}
+
 .page {
   min-height: 100vh;
   background: var(--bg-page);
@@ -16,6 +35,7 @@
   margin-bottom: 24px;
 }
 
+/* Avatar Section */
 .avatarRow {
   display: flex;
   align-items: center;
@@ -27,7 +47,7 @@
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: var(--color-primary);
+  background: var(--accent-orange);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -51,17 +71,18 @@
 .editBtn {
   margin-left: auto;
   font-size: 12px;
-  color: var(--color-primary);
+  color: var(--accent-orange);
   cursor: pointer;
   background: transparent;
-  border: 1px solid rgba(249,115,22,.3);
+  border: 1px solid rgba(249, 115, 22, 0.3);
   padding: 5px 12px;
   border-radius: 6px;
 }
 
+/* Sections */
 .section {
   background: var(--bg-card);
-  border: 1px solid var(--bg-muted);
+  border: 1px solid var(--border-color);
   border-radius: 10px;
   padding: 16px;
   margin-bottom: 14px;
@@ -74,12 +95,13 @@
   color: var(--text-secondary);
 }
 
+/* Rows */
 .row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 8px 0;
-  border-bottom: 1px solid var(--bg-muted);
+  border-bottom: 1px solid var(--border-color);
   font-size: 13px;
 }
 
@@ -101,10 +123,11 @@
   border-radius: 8px;
   font-size: 11px;
   font-weight: 500;
-  background: rgba(249,115,22,.13);
-  color: var(--color-primary);
+  background: rgba(249, 115, 22, 0.13);
+  color: var(--accent-orange);
 }
 
+/* Form Elements */
 .field {
   margin-bottom: 14px;
 }
@@ -120,7 +143,7 @@
 .input {
   width: 100%;
   background: var(--bg-input);
-  border: 1px solid var(--bg-muted);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 10px 12px;
   color: var(--text-primary);
@@ -129,10 +152,11 @@
   box-sizing: border-box;
 }
 
+/* Buttons */
 .btn {
   padding: 9px 20px;
   border-radius: 8px;
-  background: var(--color-primary);
+  background: var(--accent-orange);
   color: #fff;
   font-size: 13px;
   font-weight: 500;
@@ -145,7 +169,7 @@
   padding: 10px;
   border-radius: 8px;
   background: transparent;
-  border: 1px solid var(--bg-muted);
+  border: 1px solid var(--border-color);
   color: var(--text-secondary);
   font-size: 13px;
   cursor: pointer;
@@ -157,15 +181,37 @@
   padding: 10px;
   border-radius: 8px;
   background: transparent;
-  border: 1px solid var(--color-error);
-  color: var(--color-error);
+  border: 1px solid var(--danger-text);
+  color: var(--danger-text);
   font-size: 13px;
   cursor: pointer;
 }
 
+/* Alerts */
+.success {
+  background: var(--success-bg);
+  border: 1px solid var(--success-border);
+  border-radius: 7px;
+  padding: 9px 12px;
+  font-size: 13px;
+  color: var(--success-text);
+  margin-bottom: 14px;
+}
+
+.error {
+  background: rgba(226, 75, 74, 0.1);
+  border: 1px solid rgba(226, 75, 74, 0.25);
+  border-radius: 7px;
+  padding: 9px 12px;
+  font-size: 13px;
+  color: var(--danger-text);
+  margin-bottom: 14px;
+}
+
+/* Danger Zone */
 .danger {
-  background: rgba(226,75,74,.06);
-  border: 1px solid rgba(226,75,74,.25);
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-border);
   border-radius: 10px;
   padding: 16px;
 }
@@ -173,7 +219,7 @@
 .dangerTitle {
   font-size: 13px;
   font-weight: 500;
-  color: var(--color-error);
+  color: var(--danger-text);
   margin-bottom: 10px;
 }
 
@@ -190,22 +236,9 @@
   margin-top: 2px;
 }
 
-.success {
-  background: rgba(29,158,117,.1);
-  border: 1px solid rgba(29,158,117,.25);
-  border-radius: 7px;
-  padding: 9px 12px;
-  font-size: 13px;
-  color: var(--color-success);
-  margin-bottom: 14px;
-}
-
-.error {
-  background: rgba(226,75,74,.1);
-  border: 1px solid rgba(226,75,74,.25);
-  border-radius: 7px;
-  padding: 9px 12px;
-  font-size: 13px;
-  color: var(--color-error);
-  margin-bottom: 14px;
+/* Utility for inline delete button override */
+.btnDangerInline {
+  width: auto;
+  padding: 6px 14px;
+  margin-left: 12px;
 }

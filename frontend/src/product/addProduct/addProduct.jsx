@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../api/api';
-import Navbar from '../navbar/navbar';
-import './add-product.css';
+import api from '../../api/api';
+ import './add-product.css';
+import Navbar from '../../navbar/navbar';
 
 export default function AddProduct() {
   const navigate = useNavigate();

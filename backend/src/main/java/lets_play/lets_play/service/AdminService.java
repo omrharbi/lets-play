@@ -22,8 +22,6 @@ public class AdminService {
     private final UserMapper userMapper;
     private final ProductMapper productMapper;
 
-    // ─── users ───────────────────────────────────────────────────────
-
     public ApiResponse<List<UserResponse>> getAllUsers() {
         var users = userRepository.findAll();
         if (users.isEmpty())

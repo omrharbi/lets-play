@@ -30,8 +30,7 @@ public class AuthContoller {
 
     @PostMapping("login")
     public ResponseEntity<ApiResponse<LoginResponse>>login(@RequestBody LoginRequest request){
-        return  ResponseEntity.status(HttpStatus.CREATED)
-                .body(authService.login(request));
+            return ResponseEntity.ok(authService.login(request));
     }
 
 }

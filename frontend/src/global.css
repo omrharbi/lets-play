@@ -1,29 +1,154 @@
-/* global.css */
+/* src/styles/global.css */
+
 :root {
-  --bg-page: #0f0f0f;
-  --bg-secondary: #1a1a1a;
-  --bg-card: #1e1e1e;
-  --bg-input: #222;
-  --bg-muted: #2e2e2e;
-  --border-light: #333;
-  
-  --text-primary: #f1f0e8;
-  --text-secondary: #888780;
-  
-  --color-primary: #f97316;
-  --color-success: #1D9E75;
-  --color-error: #E24B4A;
+  /* ─── backgrounds ──────────────────────────────────────────────── */
+  --bg:          #0f0f0f;
+  --bg2:         #1a1a1a;
+  --bg3:         #222;
+  --card:        #1e1e1e;
+
+  /* ─── brand ────────────────────────────────────────────────────── */
+  --orange:      #f97316;
+  --orange2:     #ea6a0a;
+  --orange-soft: rgba(249, 115, 22, 0.1);
+  --orange-dim:  rgba(249, 115, 22, 0.08);
+
+  /* ─── text ──────────────────────────────────────────────────────── */
+  --text:        #f1f0e8;
+  --muted:       #888780;
+  --subtle:      #444441;
+
+  /* ─── borders ───────────────────────────────────────────────────── */
+  --border:      #2e2e2e;
+  --border-soft: #333;
+
+  /* ─── status ─────────────────────────────────────────────────────── */
+  --success:     #1D9E75;
+  --success-bg:  rgba(29, 158, 117, 0.1);
+  --success-bd:  rgba(29, 158, 117, 0.25);
+
+  --danger:      #E24B4A;
+  --danger-bg:   rgba(226, 75, 74, 0.1);
+  --danger-bd:   rgba(226, 75, 74, 0.25);
+  --danger-zone: rgba(226, 75, 74, 0.06);
+
+  --info:        #378ADD;
+  --info-bg:     rgba(55, 138, 221, 0.13);
+
+  --warning:     #EF9F27;
+
+  /* ─── typography ─────────────────────────────────────────────────── */
+  --font:        -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --fs-xs:       11px;
+  --fs-sm:       12px;
+  --fs-base:     13px;
+  --fs-md:       14px;
+  --fs-lg:       16px;
+  --fs-xl:       18px;
+  --fs-2xl:      22px;
+  --fs-3xl:      26px;
+
+  /* ─── radius ─────────────────────────────────────────────────────── */
+  --r-sm:   6px;
+  --r-md:   8px;
+  --r-lg:   10px;
+  --r-xl:   12px;
+  --r-2xl:  14px;
+  --r-full: 9999px;
+
+  /* ─── spacing ────────────────────────────────────────────────────── */
+  --sp-xs:  4px;
+  --sp-sm:  8px;
+  --sp-md:  12px;
+  --sp-lg:  16px;
+  --sp-xl:  24px;
+  --sp-2xl: 32px;
+
+  /* ─── shadows ────────────────────────────────────────────────────── */
+  --shadow-sm:  0 2px 8px rgba(0,0,0,.3);
+  --shadow-md:  0 4px 16px rgba(0,0,0,.4);
+  --shadow-lg:  0 8px 24px rgba(0,0,0,.5);
 }
 
-/* Optional: Global Reset */
-* {
+/* ─── reset ──────────────────────────────────────────────────────────── */
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
 body {
-  background-color: var(--bg-page);
-  color: var(--text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
 }
+
+a { text-decoration: none; color: inherit; }
+button { font-family: var(--font); cursor: pointer; }
+input, textarea, select { font-family: var(--font); }
+
+/* ─── reusable utility classes ───────────────────────────────────────── */
+.page      { min-height: 100vh; background: var(--bg); color: var(--text); }
+.wrap-sm   { max-width: 480px;  margin: 0 auto; padding: var(--sp-2xl) var(--sp-xl); }
+.wrap-md   { max-width: 600px;  margin: 0 auto; padding: var(--sp-2xl) var(--sp-xl); }
+.wrap-lg   { max-width: 800px;  margin: 0 auto; padding: var(--sp-2xl) var(--sp-xl); }
+.wrap-xl   { max-width: 1100px; margin: 0 auto; padding: var(--sp-2xl) var(--sp-xl); }
+
+.card      { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-2xl); }
+.section   { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-xl); padding: var(--sp-lg); margin-bottom: var(--sp-md); }
+
+.btn-primary {
+  padding: 10px 20px; border-radius: var(--r-md);
+  background: var(--orange); color: #fff;
+  border: none; font-size: var(--fs-base); font-weight: 500;
+  cursor: pointer; transition: opacity .15s;
+}
+.btn-primary:hover  { opacity: .9; }
+.btn-ghost {
+  padding: 10px 20px; border-radius: var(--r-md);
+  background: transparent; color: var(--muted);
+  border: 1px solid var(--border); font-size: var(--fs-base);
+  cursor: pointer;
+}
+.btn-danger {
+  padding: 10px 20px; border-radius: var(--r-md);
+  background: transparent; color: var(--danger);
+  border: 1px solid var(--danger); font-size: var(--fs-base);
+  cursor: pointer;
+}
+
+.input {
+  width: 100%; background: var(--bg3);
+  border: 1px solid var(--border); border-radius: var(--r-md);
+  padding: 10px 12px; color: var(--text);
+  font-size: var(--fs-md); outline: none;
+  transition: border-color .15s;
+}
+.input:focus { border-color: var(--orange); }
+
+.msg-success {
+  background: var(--success-bg); border: 1px solid var(--success-bd);
+  border-radius: var(--r-md); padding: 9px 12px;
+  font-size: var(--fs-base); color: var(--success);
+  margin-bottom: var(--sp-md);
+}
+.msg-error {
+  background: var(--danger-bg); border: 1px solid var(--danger-bd);
+  border-radius: var(--r-md); padding: 9px 12px;
+  font-size: var(--fs-base); color: var(--danger);
+  margin-bottom: var(--sp-md);
+}
+
+.chip        { display: inline-block; padding: 2px 9px; border-radius: var(--r-full); font-size: var(--fs-xs); font-weight: 500; }
+.chip-orange { background: var(--orange-soft); color: var(--orange); }
+.chip-green  { background: var(--success-bg);  color: var(--success); }
+.chip-red    { background: var(--danger-bg);   color: var(--danger); }
+.chip-blue   { background: var(--info-bg);     color: var(--info); }
+
+.divider { height: 1px; background: var(--border); margin: var(--sp-sm) 0; }
+
+.text-muted  { color: var(--muted); }
+.text-orange { color: var(--orange); }
+.text-danger { color: var(--danger); }
+.text-sm     { font-size: var(--fs-sm); }

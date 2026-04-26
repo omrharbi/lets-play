@@ -121,8 +121,9 @@ public class ProductService {
             return ApiResponse.error("ProductId is required", 400);
 
         var productOpt = productRepository.findById(productId);
-        if (productOpt.isEmpty())
-            return ApiResponse.error("Product not found", 404);
+        if (productOpt.isEmpty()) {
+            return ApiResponse.error(HttpResponseMessages.PRODUCT_NOT_FOUND, 404);
+        }
 
         return ApiResponse.success(productMapper.toResponse(productOpt.get()));
     }
