@@ -68,7 +68,6 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error("Token expired, please login again", 401));
     }
 
-    // ─── access denied (wrong role) ──────────────────────────────────
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiResponse<Void>> handleAccessDenied(AccessDeniedException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
