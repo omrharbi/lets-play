@@ -16,21 +16,30 @@ import lets_play.lets_play.dto.UserResponse;
 import lets_play.lets_play.service.AuthService;
 import lets_play.lets_play.utls.ApiResponse;
 import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth/")
 public class AuthContoller {
     private final AuthService authService;
+
     @PostMapping("register")
-    public ResponseEntity<ApiResponse<UserResponse>>register(@RequestBody RegisterRequest request){
-        return  ResponseEntity.status(HttpStatus.CREATED)
-                .body(authService.register(request));
+    public ResponseEntity<ApiResponse<UserResponse>> register(@RequestBody RegisterRequest request) {
+        var respone = authService.register(request);
+        if (respone.success())
+            return ResponseEntity.ok(respone);
+        else
+            return ResponseEntity.status(respone.status()).body(respone);
+
     }
 
-
     @PostMapping("login")
-    public ResponseEntity<ApiResponse<LoginResponse>>login(@RequestBody LoginRequest request){
-            return ResponseEntity.ok(authService.login(request));
+    public ResponseEntity<ApiResponse<LoginResponse>> login(@RequestBody LoginRequest request) {
+         var respone = authService.login(request);
+        if (respone.success())
+            return ResponseEntity.ok(respone);
+        else
+            return ResponseEntity.status(respone.status()).body(respone);
     }
 
 }

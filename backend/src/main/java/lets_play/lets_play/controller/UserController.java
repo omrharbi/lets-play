@@ -27,26 +27,42 @@ public class UserController {
     @GetMapping("/profile")
     public ResponseEntity<ApiResponse<UserResponse>> getProfile(
             @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(userService.getProfile(userDetails.getUsername()));
+       var response = userService.getProfile(userDetails.getUsername());
+        if (response.success())
+            return ResponseEntity.ok(response);
+        else
+            return ResponseEntity.status(response.status()).body(response);
     }
 
     @PutMapping("/profile")
     public ResponseEntity<ApiResponse<UserResponse>> updateProfile(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody UpdateProfileRequest request) {
-        return ResponseEntity.ok(userService.updateProfile(userDetails.getUsername(), request));
+       var response = userService.updateProfile(userDetails.getUsername(), request);
+        if (response.success())
+            return ResponseEntity.ok(response);
+        else
+            return ResponseEntity.status(response.status()).body(response);
     }
 
     @DeleteMapping("/profile")
     public ResponseEntity<ApiResponse<String>> deleteProfile(
             @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(userService.deleteProfile(userDetails.getUsername()));
+       var response = userService.deleteProfile(userDetails.getUsername());
+        if (response.success())
+            return ResponseEntity.ok(response);
+        else
+            return ResponseEntity.status(response.status()).body(response);
     }
 
     @PutMapping("/password")
     public ResponseEntity<ApiResponse<String>> changePassword(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody ChangePasswordRequest request) {
-        return ResponseEntity.ok(userService.changePassword(userDetails.getUsername(), request));
+       var response = userService.changePassword(userDetails.getUsername(), request);
+        if (response.success())
+            return ResponseEntity.ok(response);
+        else
+            return ResponseEntity.status(response.status()).body(response);
     }
 }

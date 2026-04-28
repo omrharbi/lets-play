@@ -37,7 +37,10 @@ public class ProductController {
 
         var response = productService.createProduct(
                 userDetails, name, description, price, image);
-        return ResponseEntity.status(response.status()).body(response);
+        if (response.success())
+            return ResponseEntity.ok(response);
+        else
+            return ResponseEntity.status(response.status()).body(response);
     }
 
     @PutMapping(value = "/edit/{productId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -51,26 +54,29 @@ public class ProductController {
 
         var response = productService.editProduct(
                 userDetails, productId, name, description, price, image);
-        return ResponseEntity.status(response.status()).body(response);
+        if (response.success())
+            return ResponseEntity.ok(response);
+        else
+            return ResponseEntity.status(response.status()).body(response);
     }
 
     @GetMapping("/get-all-products")
     public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+        var response=productService.getAllProducts();
+        if (response.success())
+            return ResponseEntity.ok(response);
+        else
+            return ResponseEntity.status(response.status()).body(response);
     }
 
     @GetMapping("/get-product")
     public ResponseEntity<ApiResponse<ProductResponse>> getProductById(
             @RequestParam String productId) {
 
-        return ResponseEntity.ok(productService.getProductById(productId));
-    }
-
-    @DeleteMapping("/delete-by-user")
-    public ResponseEntity<ApiResponse<String>> deleteByOwner(
-            @AuthenticationPrincipal UserDetails userDetail,
-            @RequestParam String productId) {
-
-        return ResponseEntity.ok(productService.deleteProductByOwner(userDetail, productId));
+        var response=productService.getProductById(productId);
+        if (response.success())
+            return ResponseEntity.ok(response);
+        else
+            return ResponseEntity.status(response.status()).body(response);
     }
 }

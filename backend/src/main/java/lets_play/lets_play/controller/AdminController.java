@@ -29,40 +29,66 @@ public class AdminController {
     @GetMapping("/users")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse<List<UserResponse>>> getAllUsers() {
-        return ResponseEntity.ok(adminService.getAllUsers());
+        var response = adminService.getAllUsers();
+        if (response.success())
+            return ResponseEntity.ok(response);
+        else
+            return ResponseEntity.status(response.status()).body(response);
     }
 
     @GetMapping("/users/{id}")
     public ResponseEntity<ApiResponse<UserResponse>> getUserById(@PathVariable String id) {
-        return ResponseEntity.ok(adminService.getUserById(id));
+        var response = adminService.getUserById(id);
+        if (response.success())
+            return ResponseEntity.ok(response);
+        else
+            return ResponseEntity.status(response.status()).body(response);
     }
 
     @PutMapping("/users/{id}")
     public ResponseEntity<ApiResponse<UserResponse>> updateUser(
             @PathVariable String id,
             @RequestBody AdminUpdateUserRequest request) {
-        return ResponseEntity.ok(adminService.updateUser(id, request));
+        var response = adminService.updateUser(id, request);
+        if (response.success())
+            return ResponseEntity.ok(response);
+        else
+            return ResponseEntity.status(response.status()).body(response);
     }
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<ApiResponse<String>> deleteUser(@PathVariable String id) {
-        return ResponseEntity.ok(adminService.deleteUser(id));
+        var response = adminService.deleteUser(id);
+        if (response.success())
+            return ResponseEntity.ok(response);
+        else
+            return ResponseEntity.status(response.status()).body(response);
     }
-
-    // ─── products ────────────────────────────────────────────────────
 
     @GetMapping("/products")
     public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProducts() {
-        return ResponseEntity.ok(adminService.getAllProducts());
+        var response = adminService.getAllProducts();
+        if (response.success())
+            return ResponseEntity.ok(response);
+        else
+            return ResponseEntity.status(response.status()).body(response);
     }
 
     @GetMapping("/products/{id}")
     public ResponseEntity<ApiResponse<ProductResponse>> getProductById(@PathVariable String id) {
-        return ResponseEntity.ok(adminService.getProductById(id));
+        var response = adminService.getProductById(id);
+        if (response.success())
+            return ResponseEntity.ok(response);
+        else
+            return ResponseEntity.status(response.status()).body(response);
     }
 
     @DeleteMapping("/products/{id}")
     public ResponseEntity<ApiResponse<String>> deleteProduct(@PathVariable String id) {
-        return ResponseEntity.ok(adminService.deleteProduct(id));
+        var response = adminService.deleteProduct(id);
+        if (response.success())
+            return ResponseEntity.ok(response);
+        else
+            return ResponseEntity.status(response.status()).body(response);
     }
 }
