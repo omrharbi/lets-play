@@ -3,16 +3,14 @@ package lets_play.lets_play.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.Valid;
-import lets_play.lets_play.dto.AdminUpdateUserRequest;
 import lets_play.lets_play.dto.ProductResponse;
 import lets_play.lets_play.dto.UserResponse;
 import lets_play.lets_play.service.AdminService;
@@ -40,8 +38,8 @@ public class AdminController {
     }
 
     @DeleteMapping("/delete-users/{id}")
-    public ResponseEntity<ApiResponse<String>> deleteUser(@PathVariable String id) {
-        var response = adminService.deleteUser(id);
+    public ResponseEntity<ApiResponse<String>> deleteUser(@AuthenticationPrincipal UserDetails currentAdmin, @PathVariable String id) {
+        var response = adminService.deleteUser(id, currentAdmin);
 
         return ResponseEntity.status(response.status()).body(response);
     }
@@ -59,8 +57,8 @@ public class AdminController {
     }
 
     @DeleteMapping("/delete-products/{id}")
-    public ResponseEntity<ApiResponse<String>> deleteProduct(@PathVariable String id) {
-        var response = adminService.deleteProduct(id);
+    public ResponseEntity<ApiResponse<String>> deleteProduct(@AuthenticationPrincipal UserDetails currentAdmin, @PathVariable String id) {
+        var response = adminService.deleteProduct(id, currentAdmin);
         return ResponseEntity.status(response.status()).body(response);
     }
 }

@@ -3,7 +3,6 @@ package lets_play.lets_play.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
-import lets_play.lets_play.dto.ChangePasswordRequest;
 import lets_play.lets_play.dto.UpdateProfileRequest;
 import lets_play.lets_play.dto.UserResponse;
 import lets_play.lets_play.service.UserService;

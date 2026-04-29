@@ -6,7 +6,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lets_play.lets_play.Mapper.UserMapper;
-import lets_play.lets_play.dto.ChangePasswordRequest;
 import lets_play.lets_play.dto.UpdateProfileRequest;
 import lets_play.lets_play.dto.UserResponse;
 import lets_play.lets_play.repository.UserRepository;
