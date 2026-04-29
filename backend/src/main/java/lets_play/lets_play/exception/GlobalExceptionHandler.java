@@ -2,8 +2,6 @@ package lets_play.lets_play.exception;
 
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
-import java.util.Map;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;

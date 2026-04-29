@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.data.annotation.Id; 
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,9 +24,14 @@ public class User implements UserDetails {
 
     @Id
     private String id;
+
+    @Field("name")
     private String name;
+    @Field("email")
     private String email;
+    @Field("password")
     private String password;
+    @Field("role")
     private String role;
 
     // ─── UserDetails methods ──────────────────────────────────────────

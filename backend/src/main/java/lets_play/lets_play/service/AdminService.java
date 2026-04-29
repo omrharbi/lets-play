@@ -40,32 +40,6 @@ public class AdminService {
         return ApiResponse.success(userMapper.toResponse(userOpt.get()));
     }
 
-    public ApiResponse<UserResponse> updateUser(String id, AdminUpdateUserRequest request) {
-        if (id == null || id.isBlank())
-            return ApiResponse.error("User id is required",400);
-
-        var userOpt = userRepository.findById(id);
-        if (userOpt.isEmpty())
-            return ApiResponse.error("User not found",404);
-
-        var user = userOpt.get();
-
-        if (request.name() != null && !request.name().isBlank())
-            user.setName(request.name());
-
-        if (request.email() != null && !request.email().isBlank()) {
-            if (userRepository.existsByEmail(request.email()))
-                return ApiResponse.error("Email already taken",400);
-            user.setEmail(request.email());
-        }
-
-        if (request.role() != null && !request.role().isBlank())
-            user.setRole(request.role());
-
-        return ApiResponse.success("User updated successfully",
-                userMapper.toResponse(userRepository.save(user)));
-    }
-
     public ApiResponse<String> deleteUser(String id) {
         if (id == null || id.isBlank())
             return ApiResponse.error("User id is required",400);
@@ -79,9 +53,7 @@ public class AdminService {
         userRepository.deleteById(user.getId());
         return ApiResponse.success("User and their products deleted");
     }
-
-    // ─── products ────────────────────────────────────────────────────
-
+    
     public ApiResponse<List<ProductResponse>> getAllProducts() {
         var products = productRepository.findAll();
         if (products.isEmpty())

@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,10 +36,7 @@ public class ProductController {
 
         var response = productService.createProduct(
                 userDetails, name, description, price, image);
-        if (response.success())
-            return ResponseEntity.ok(response);
-        else
-            return ResponseEntity.status(response.status()).body(response);
+        return ResponseEntity.status(response.status()).body(response);
     }
 
     @PutMapping(value = "/edit/{productId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -52,29 +50,27 @@ public class ProductController {
 
         var response = productService.editProduct(
                 userDetails, productId, name, description, price, image);
-        if (response.success())
-            return ResponseEntity.ok(response);
-        else
-            return ResponseEntity.status(response.status()).body(response);
+        return ResponseEntity.status(response.status()).body(response);
     }
 
     @GetMapping("/get-all-products")
     public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProducts() {
-        var response=productService.getAllProducts();
-        if (response.success())
-            return ResponseEntity.ok(response);
-        else
-            return ResponseEntity.status(response.status()).body(response);
+        var response = productService.getAllProducts();
+        return ResponseEntity.status(response.status()).body(response);
     }
 
-    @GetMapping("/get-product")
+    @GetMapping("/get-product/{productId}")
     public ResponseEntity<ApiResponse<ProductResponse>> getProductById(
-            @RequestParam String productId) {
+            @PathVariable String productId) {
+        var response = productService.getProductById(productId);
+        return ResponseEntity.status(response.status()).body(response);
+    }
 
-        var response=productService.getProductById(productId);
-        if (response.success())
-            return ResponseEntity.ok(response);
-        else
-            return ResponseEntity.status(response.status()).body(response);
+    @DeleteMapping("/delete/{productId}")
+    public ResponseEntity<ApiResponse<String>> deleteProduct(@AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable String productId) {
+
+        var response = productService.deleteProductByOwner(userDetails, productId);
+        return ResponseEntity.status(response.status()).body(response);
     }
 }

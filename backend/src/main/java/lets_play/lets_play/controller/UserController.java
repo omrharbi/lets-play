@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import lets_play.lets_play.dto.ChangePasswordRequest;
 import lets_play.lets_play.dto.UpdateProfileRequest;
 import lets_play.lets_play.dto.UserResponse;
@@ -27,42 +28,16 @@ public class UserController {
     @GetMapping("/profile")
     public ResponseEntity<ApiResponse<UserResponse>> getProfile(
             @AuthenticationPrincipal UserDetails userDetails) {
-       var response = userService.getProfile(userDetails.getUsername());
-        if (response.success())
-            return ResponseEntity.ok(response);
-        else
-            return ResponseEntity.status(response.status()).body(response);
+        var response = userService.getProfile(userDetails.getUsername());
+        return ResponseEntity.status(response.status()).body(response);
     }
 
-    @PutMapping("/profile")
+    @PutMapping("/update-profile")
     public ResponseEntity<ApiResponse<UserResponse>> updateProfile(
             @AuthenticationPrincipal UserDetails userDetails,
-            @RequestBody UpdateProfileRequest request) {
-       var response = userService.updateProfile(userDetails.getUsername(), request);
-        if (response.success())
-            return ResponseEntity.ok(response);
-        else
-            return ResponseEntity.status(response.status()).body(response);
+            @Valid @RequestBody UpdateProfileRequest request) {
+        var response = userService.updateProfile(userDetails.getUsername(), request);
+        return ResponseEntity.status(response.status()).body(response);
     }
 
-    @DeleteMapping("/profile")
-    public ResponseEntity<ApiResponse<String>> deleteProfile(
-            @AuthenticationPrincipal UserDetails userDetails) {
-       var response = userService.deleteProfile(userDetails.getUsername());
-        if (response.success())
-            return ResponseEntity.ok(response);
-        else
-            return ResponseEntity.status(response.status()).body(response);
-    }
-
-    @PutMapping("/password")
-    public ResponseEntity<ApiResponse<String>> changePassword(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @RequestBody ChangePasswordRequest request) {
-       var response = userService.changePassword(userDetails.getUsername(), request);
-        if (response.success())
-            return ResponseEntity.ok(response);
-        else
-            return ResponseEntity.status(response.status()).body(response);
-    }
 }

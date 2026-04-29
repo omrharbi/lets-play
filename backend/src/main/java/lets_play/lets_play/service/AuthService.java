@@ -1,5 +1,4 @@
 package lets_play.lets_play.service;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import lets_play.lets_play.Mapper.UserMapper;
@@ -28,12 +27,14 @@ public class AuthService {
         if (request.password() == null || request.password().isBlank())
             return ApiResponse.error("Password is required",400);
 
-        if (userRepository.existsByEmail(request.email()))
-            return ApiResponse.error("Email already exists",400);
+        String normalizedEmail = request.email().toLowerCase().trim();
+        
+        if (userRepository.existsByEmail(normalizedEmail))
+            return ApiResponse.error("Email already exists",409);
 
         User user = new User();
         user.setName(request.name());
-        user.setEmail(request.email());
+        user.setEmail(normalizedEmail);
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setRole("ROLE_USER");
 
@@ -48,14 +49,27 @@ public class AuthService {
         if (request.password() == null || request.password().isBlank())
             return ApiResponse.error("Password is required",400);
 
-        var userOpt = userRepository.findByEmail(request.email());
+        var userOpt = userRepository.findByEmail(request.email().toLowerCase().trim());
         if (userOpt.isEmpty())
             return ApiResponse.error("Invalid email or password",400);
 
         var user = userOpt.get();
-
-        if (!passwordEncoder.matches(request.password(), user.getPassword()))
+        
+        // Check if password is BCrypt (starts with $2a$, $2b$, or $2y$)
+        boolean isBcrypt = user.getPassword() != null && 
+                           user.getPassword().matches("^\\$2[aby]\\$.{56}$");
+        
+        if (!isBcrypt) {
+            // Old plain-text password - check directly
+            if (!request.password().equals(user.getPassword())) {
+                return ApiResponse.error("Invalid email or password",400);
+            }
+            // Migrate to BCrypt
+            user.setPassword(passwordEncoder.encode(request.password()));
+            user = userRepository.save(user);
+        } else if (!passwordEncoder.matches(request.password(), user.getPassword())) {
             return ApiResponse.error("Invalid email or password",400);
+        }
 
         String token = jwtService.generateToken(user);
         return ApiResponse.success("Login successful", new LoginResponse(token));

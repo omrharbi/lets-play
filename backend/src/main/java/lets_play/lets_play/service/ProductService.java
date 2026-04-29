@@ -1,6 +1,4 @@
 package lets_play.lets_play.service;
-
-import java.nio.file.attribute.UserPrincipal;
 import java.util.List;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import lets_play.lets_play.Mapper.ProductMapper;
-import lets_play.lets_play.dto.ProductRequest;
 import lets_play.lets_play.dto.ProductResponse;
 import lets_play.lets_play.model.Product;
 import lets_play.lets_play.repository.ProductRepository;
@@ -44,7 +41,9 @@ public class ProductService {
         if (price == null || price <= 0)
             return ApiResponse.error("Price must be greater than 0", 400);
 
-        String imageUrl = cloudinaryService.uploadImage(image);
+       String imageUrl = (image != null && !image.isEmpty()) 
+            ? cloudinaryService.uploadImage(image) 
+            : null;
 
         var user = userOpt.get();
         Product product = new Product();
@@ -52,7 +51,7 @@ public class ProductService {
         product.setDescription(description);
         product.setPrice(price);
         product.setUserId(user.getId());
-        product.setImageUrl(imageUrl); // ← save url
+        product.setImageUrl(imageUrl);
 
         return ApiResponse.created("Product created successfully",
                 productMapper.toResponse(productRepository.save(product)));
@@ -82,8 +81,8 @@ public class ProductService {
             product.setPrice(price);
 
         if (image != null && !image.isEmpty()) {
-            // delete old image first
-            cloudinaryService.deleteImage(product.getImageUrl());
+            if (product.getImageUrl() != null)
+                cloudinaryService.deleteImage(product.getImageUrl());
             product.setImageUrl(cloudinaryService.uploadImage(image));
         }
 
@@ -102,8 +101,11 @@ public class ProductService {
         var user = userOpt.get();
 
         var productOpt = productRepository.findByIdAndUserId(productId, user.getId());
-        if (productOpt.isEmpty())
+        if (productOpt.isEmpty() || !productOpt.isPresent())
             return ApiResponse.error("Product not found or access denied", 403);
+
+         if (productOpt.get().getImageUrl() != null)
+            cloudinaryService.deleteImage(productOpt.get().getImageUrl());
 
         productRepository.deleteById(productOpt.get().getId());
         return ApiResponse.success("Product deleted successfully");
@@ -126,17 +128,5 @@ public class ProductService {
         }
 
         return ApiResponse.success(productMapper.toResponse(productOpt.get()));
-    }
-
-    public ApiResponse<String> deleteProductByAdmin(String productId) {
-        if (productId == null || productId.isBlank())
-            return ApiResponse.error("ProductId is required", 400);
-
-        var productOpt = productRepository.findById(productId);
-        if (productOpt.isEmpty())
-            return ApiResponse.error("Product not found", 404);
-
-        productRepository.deleteById(productOpt.get().getId());
-        return ApiResponse.success("Product deleted by admin");
     }
 }

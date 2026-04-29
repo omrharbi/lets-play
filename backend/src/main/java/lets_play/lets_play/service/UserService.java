@@ -53,33 +53,4 @@ public class UserService implements UserDetailsService {
         return ApiResponse.success("Profile updated",
                 userMapper.toResponse(userRepository.save(user)));
     }
-
-    public ApiResponse<String> deleteProfile(String email) {
-        var userOpt = userRepository.findByEmail(email);
-        if (userOpt.isEmpty())
-            return ApiResponse.error("User not found",404);
-        userRepository.deleteById(userOpt.get().getId());
-        return ApiResponse.success("Account deleted successfully");
-    }
-
-    public ApiResponse<String> changePassword(String email, ChangePasswordRequest request) {
-        if (request.currentPassword() == null || request.currentPassword().isBlank())
-            return ApiResponse.error("Current password is required",400);
-
-        if (request.newPassword() == null || request.newPassword().isBlank())
-            return ApiResponse.error("New password is required",400);
-
-        var userOpt = userRepository.findByEmail(email);
-        if (userOpt.isEmpty())
-            return ApiResponse.error("User not found",404);
-
-        var user = userOpt.get();
-
-        if (!passwordEncoder.matches(request.currentPassword(), user.getPassword()))
-            return ApiResponse.error("Current password is incorrect",400);
-
-        user.setPassword(passwordEncoder.encode(request.newPassword()));
-        userRepository.save(user);
-        return ApiResponse.success("Password updated successfully");
-    }
 }

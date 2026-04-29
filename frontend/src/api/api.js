@@ -3,7 +3,7 @@ import axios from 'axios'
 import { isLoggedIn } from '../jwt/jwt'
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080'
+  baseURL: 'https://localhost:8080'
 })
 
 api.interceptors.request.use(config => {
